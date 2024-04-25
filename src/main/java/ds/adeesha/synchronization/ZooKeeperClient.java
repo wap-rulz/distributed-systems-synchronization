@@ -14,8 +14,8 @@ public class ZooKeeperClient {
         zooKeeper = new ZooKeeper(zooKeeperUrl, sessionTimeout, watcher);
     }
 
-    public String createNode(String path, boolean shouldWatch, CreateMode mode) throws KeeperException, InterruptedException, UnsupportedEncodingException {
-        String createdPath = zooKeeper.create(path, "".getBytes("UTF-8"), ZooDefs.Ids.OPEN_ACL_UNSAFE, mode);
+    public String createNode(String path, boolean shouldWatch, CreateMode mode, byte[] data) throws KeeperException, InterruptedException, UnsupportedEncodingException {
+        String createdPath = zooKeeper.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, mode);
         return createdPath;
     }
 
@@ -35,5 +35,9 @@ public class ZooKeeperClient {
 
     public void addWatch(String path) throws KeeperException, InterruptedException {
         zooKeeper.exists(path, true);
+    }
+
+    public byte[]  getData(String path, boolean shouldWatch) throws KeeperException, InterruptedException {
+        return zooKeeper.getData(path, shouldWatch, null);
     }
 }
