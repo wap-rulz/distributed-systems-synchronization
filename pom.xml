@@ -6,7 +6,7 @@
 
     <groupId>ds.adeesha.synchronization</groupId>
     <artifactId>distributed-lock</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
