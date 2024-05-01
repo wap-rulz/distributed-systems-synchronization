@@ -10,11 +10,14 @@ public abstract class DistributedTx implements Watcher {
     public static final String VOTE_ABORT = "vote_abort";
     public static final String GLOBAL_COMMIT = "global_commit";
     public static final String GLOBAL_ABORT = "global_abort";
-    String currentTransaction;
-    ZooKeeperClient client;
-    DistributedTxListener listener;
+    public static final String FORWARD_SLASH = "/";
+    public static final String EMPTY_STRING = "";
 
-    public DistributedTx(DistributedTxListener listener) {
+    protected String currentTransaction;
+    protected ZooKeeperClient client;
+    protected DistributedTxListener listener;
+
+    public void setListener(DistributedTxListener listener) {
         this.listener = listener;
     }
 

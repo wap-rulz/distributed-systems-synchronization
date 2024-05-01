@@ -8,11 +8,8 @@ import java.nio.charset.StandardCharsets;
 
 public class DistributedTxParticipant extends DistributedTx implements Watcher {
     private static final String PARTICIPANT_PREFIX = "/txp_";
-    private String transactionRoot;
 
-    public DistributedTxParticipant(DistributedTxListener listener) {
-        super(listener);
-    }
+    private String transactionRoot;
 
     public void voteCommit() {
         try {
@@ -36,16 +33,16 @@ public class DistributedTxParticipant extends DistributedTx implements Watcher {
         }
     }
 
-    private void rest() {
+    private void reset() {
         currentTransaction = null;
         transactionRoot = null;
     }
 
     void onStartTransaction(String transactionId, String participantId) {
         try {
-            transactionRoot = "/" + transactionId;
+            transactionRoot = FORWARD_SLASH + transactionId;
             currentTransaction = transactionRoot + PARTICIPANT_PREFIX + participantId;
-            client.createNode(currentTransaction, true, CreateMode.EPHEMERAL, "".getBytes(StandardCharsets.UTF_8));
+            client.createNode(currentTransaction, CreateMode.EPHEMERAL, EMPTY_STRING.getBytes(StandardCharsets.UTF_8));
             client.addWatch(transactionRoot);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -61,7 +58,7 @@ public class DistributedTxParticipant extends DistributedTx implements Watcher {
             } else if (DistributedTxCoordinator.GLOBAL_ABORT.equals(dataString)) {
                 listener.onGlobalAbort();
             } else {
-                System.out.println("Unknown data change in the root : " + dataString);
+                System.out.println("Unknown data change in the root: " + dataString);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -78,7 +75,7 @@ public class DistributedTxParticipant extends DistributedTx implements Watcher {
         }
         if (Event.EventType.NodeDeleted.equals(type)) {
             if (transactionRoot != null && event.getPath().equals(transactionRoot)) {
-                rest();
+                reset();
             }
         }
     }
